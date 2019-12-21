@@ -14,11 +14,13 @@ import java.util.stream.Stream;
 public class Generator {
 	int nCol;
 	int nRows;
+	int repetidos;
 	String tableName;
 	String[] colNames;
 	String[] types;
 	Object[] values;
 	Object[][] resValues;
+	int acum;
 	Scanner sc = new Scanner(System.in);
 	Path path = Paths.get("/home/peri/Descargas/random-name-master/names.txt");
 	ArrayList<String> names;
@@ -31,6 +33,7 @@ public class Generator {
 		values = new Object[nCol];
 		resValues = new Object[nRows][nCol];
 		this.tableName = tableName;
+		acum = 1;
 		
 		generateNamesFile();
 	}
@@ -38,7 +41,7 @@ public class Generator {
 	public void defineTypes() {
 		int selection;
 		for(int i = 0; i < nCol; i++) {
-			System.out.println("Introduce el tipo de dato para la columna " + i + ":\n1.int\n2.float\n3.bool\n4.TimeStamp\n5.Varchar\n6.VarCharName");
+			System.out.println("Introduce el tipo de dato para la columna " + i + ":\n1.int\n2.float\n3.bool\n4.TimeStamp\n5.Varchar\n6.VarCharName\n7.Int incremental\n8.Int repetido");
 			selection = sc.nextInt();
 			
 			switch(selection) {
@@ -65,6 +68,15 @@ public class Generator {
 				case 6:
 					types[i] = "string";
 					//values[i] = generateRandomName();
+					break;
+				case 7:
+					types[i] = "primaryKeyIntIncrement";
+					break;
+				case 8:
+					types[i] = "intRepetidos";
+					Scanner sc = new Scanner(System.in);
+					System.out.println("Valor maximo?");
+					repetidos = sc.nextInt();
 					break;
 				default:
 					i--;	
@@ -98,6 +110,13 @@ public class Generator {
 						break;
 					case "string":
 						resValues[i][j] = generateRandomName();
+						break;
+					case "primaryKeyIntIncrement":
+						resValues[i][j] = acum;
+						acum++;
+						break;
+					case "intRepetidos":
+						resValues[i][j] = (int) (Math.random() * repetidos);
 						break;
 					default:
 						j--;
